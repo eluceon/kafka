@@ -1,0 +1,109 @@
+plugins {
+//    id 'org.sonarqube'
+}
+
+group = 'com.github.eluceon'
+
+
+ext.versions = [
+        lombok                : '1.18.22',
+        mapstruct             : '1.5.3.Final',
+
+        kafkaClients          : '3.0.0',
+
+        micrometer            : '1.9.0',
+
+        spring                : '5.3.24',
+        springBoot            : '2.7.7',
+
+        logstashLogbackEncoder: '6.6',
+
+        junit                 : '5.8.2',
+        mockito               : '4.3.1',
+
+        h2                    : '2.1.210',
+        postgresql            : '42.2.25',
+        hibernateTypes        : '2.14.0'
+]
+
+subprojects {
+    group 'com.github.eluceon'
+
+    apply plugin: 'java'
+
+//    apply plugin: 'org.sonarqube'
+    apply plugin: 'checkstyle'
+    apply plugin: 'jacoco'
+
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    dependencies {
+        implementation platform("org.springframework.boot:spring-boot-dependencies:${versions.springBoot}")
+        annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:${versions.springBoot}")
+
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-test'
+
+        constraints {
+            compileOnly "org.projectlombok:lombok:${versions.lombok}"
+            annotationProcessor "org.projectlombok:lombok:${versions.lombok}"
+
+            implementation "org.mapstruct:mapstruct:${versions.mapstruct}"
+            annotationProcessor "org.mapstruct:mapstruct-processor:${versions.mapstruct}"
+
+            implementation "org.apache.kafka:kafka-clients:${versions.kafkaClients}"
+
+            implementation "io.micrometer:micrometer-registry-prometheus:${versions.micrometer}"
+
+            implementation "org.springframework.boot:spring-boot-starter-web:${versions.springBoot}"
+            implementation "org.springframework.boot:spring-boot-starter-jdbc:${versions.springBoot}"
+            implementation "org.springframework.boot:spring-boot-starter-actuator:${versions.springBoot}"
+            implementation "org.springframework.boot:spring-boot-starter-data-jpa:${versions.springBoot}"
+            implementation "org.springframework.boot:spring-boot-starter-validation:${versions.springBoot}"
+
+            implementation "net.logstash.logback:logstash-logback-encoder:${versions.logstashLogbackEncoder}"
+
+            implementation "com.h2database:h2:${versions.h2}"
+            implementation "org.postgresql:postgresql:${versions.postgresql}"
+            implementation "com.vladmihalcea:hibernate-types-52:${versions.hibernateTypes}"
+
+            testImplementation "org.springframework.boot:spring-boot-starter-test:${versions.springBoot}"
+        }
+    }
+
+    // <editor-fold desc="CHECKSTYLE">
+    checkstyle {
+        toolVersion = '10.6.0'
+        configFile file("${rootDir}/checkstyle.xml")
+    }
+
+    checkstyleMain {
+        source = fileTree(dir: "src/main", include: "**/*.java")
+    }
+
+    checkstyleTest {
+        source = fileTree(dir: "src/test", include: "**/*.java")
+    }
+    // </editor-fold>
+
+    //<editor-fold desc="JACOCO">
+    jacoco {
+        toolVersion = "0.8.8"
+    }
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required.set(true)
+        }
+    }
+
+    test.finalizedBy jacocoTestReport
+    //</editor-fold>
+
+
+}

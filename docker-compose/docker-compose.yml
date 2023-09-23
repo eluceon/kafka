@@ -1,0 +1,80 @@
+version: '3.9'
+
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 2181:2181
+    networks:
+      - kafka
+
+  broker:
+    container_name: broker
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - kafka
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui
+    depends_on:
+      - broker
+    ports:
+      - "8082:8080"
+    restart: "no"
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=test-kafka-cluster
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker:9092
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+    networks:
+      - kafka
+
+  kafka-setup:
+    container_name: kafka-setup
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - broker
+    command: "bash -c 'echo Waiting for kafka to be ready... && \
+          cub kafka-ready -b $${KAFKA_BROKER} 1 20 && \
+          kafka-topics --create --if-not-exists \
+          --bootstrap-server $${KAFKA_BROKER} \
+          --partitions $${KAFKA_PARTITIONS} --replication-factor 1 --topic $${KAFKA_SERVICE_TOPIC}'"
+    environment:
+      KAFKA_BROKER: broker:9092
+      KAFKA_SERVICE_TOPIC: SERVICE.V1
+      KAFKA_PARTITIONS: 2
+    networks:
+      - kafka
+
+  service:
+    container_name: service
+    build:
+      context: ../application
+      dockerfile: ./docker/Dockerfile
+    env_file:
+      - service/.service.env
+    ports:
+      - "8081:8080"
+    depends_on:
+      - kafka-setup
+    networks:
+      - kafka
+
+networks:
+  kafka:
+    name: kafka-network
