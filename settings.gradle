@@ -27,4 +27,5 @@ rootProject.name = 'kafka-service'
 
 include ':application'
 include 'kafka'
+include 'handler'
 

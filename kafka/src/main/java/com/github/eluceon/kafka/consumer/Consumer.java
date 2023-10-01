@@ -5,7 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.eluceon.kafka.dto.EventDto;
+import com.github.eluceon.handler.EventHandler;
+import com.github.eluceon.handler.dto.EventDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -19,6 +20,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class Consumer implements MessageListener<String, String> {
+    private final EventHandler<EventDto> eventHandler;
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .registerModule(new JavaTimeModule());
@@ -36,7 +38,7 @@ public class Consumer implements MessageListener<String, String> {
     private void processEvent(EventDto event) {
         try {
             log.debug("Processing event with parameters: code = [{}]", event.getCode());
-            //       eventHandler.handle(event);
+            eventHandler.handle(event);
             log.debug("Complete processing event with parameters: code = [{}]", event.getCode());
         } catch (RuntimeException e) {
             log.error("Error processing event with parameters: code = [{}]", event.getCode());

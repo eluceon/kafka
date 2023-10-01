@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation project(':handler')
+
     implementation 'org.apache.kafka:kafka-clients'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'com.fasterxml.jackson.core:jackson-databind'

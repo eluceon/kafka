@@ -1,0 +1,8 @@
+plugins {
+    id 'java'
+
+    id 'com.github.eluceon.lombok-conventions'
+    id 'com.github.eluceon.junit-conventions'
+    id 'com.github.eluceon.mapstruct-conventions'
+}
+

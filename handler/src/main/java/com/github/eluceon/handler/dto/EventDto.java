@@ -1,4 +1,4 @@
-package com.github.eluceon.kafka.dto;
+package com.github.eluceon.handler.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
