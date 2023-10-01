@@ -25,7 +25,8 @@ dependencyResolutionManagement {
 
 rootProject.name = 'kafka-service'
 
-include ':application'
+include 'application'
 include 'kafka'
 include 'handler'
+include 'api'
 
