@@ -23,6 +23,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'kafka'
+rootProject.name = 'kafka-service'
 
 include ':application'
+include 'kafka'
+
