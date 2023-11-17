@@ -43,8 +43,11 @@ kafka-service:
       auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET}
       session-timeout-ms: ${KAFKA_SESSION_TIMEOUT_MS}
     producer:
-      max-request-size: ${KAFKA_MAX_REQUEST_SIZE}
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      max-request-size: ${KAFKA_MAX_REQUEST_SIZE}
+      batch-size: ${KAFKA_BATCH_SIZE}
+      lingerMs: ${KAFKA_LINGER_MS}
+      acks: ${ACKS}
       topic: ${KAFKA_PRODUCER_TOPIC}
 server:
   port: 8081

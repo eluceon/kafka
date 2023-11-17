@@ -37,6 +37,9 @@ public class KafkaProducerConfiguration {
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, properties.getMaxRequestSize());
+        configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, properties.getBatchSize());
+        configProps.put(ProducerConfig.LINGER_MS_CONFIG, properties.getLingerMs());
+        configProps.put(ProducerConfig.ACKS_CONFIG, properties.getAcks());
 
         return configProps;
     }
