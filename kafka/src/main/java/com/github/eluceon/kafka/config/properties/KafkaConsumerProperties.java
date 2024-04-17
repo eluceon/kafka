@@ -1,4 +1,4 @@
-package com.github.eluceon.kafka.config;
+package com.github.eluceon.kafka.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Configuration
 @ConfigurationProperties(prefix = "kafka-service.kafka.consumer")
+@Getter
+@Setter
 public class KafkaConsumerProperties {
     /**
      * Макс. количество concurrent listenerContainer'ов
@@ -41,4 +41,26 @@ public class KafkaConsumerProperties {
      * Таймаут сессии
      */
     private Integer sessionTimeoutMs;
+
+    private Ssl ssl;
+    private Security security;
+
+    @Getter
+    @Setter
+    public static class Ssl {
+        private Boolean enabled;
+        private String truststoreLocation;
+        private String truststorePassword;
+        private String keystoreLocation;
+        private String keystorePassword;
+        private String keyPassword;
+        private String keystoreType;
+        private String truststoreType;
+    }
+
+    @Getter
+    @Setter
+    public static class Security {
+        private String protocol;
+    }
 }

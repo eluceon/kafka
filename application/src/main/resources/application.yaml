@@ -42,6 +42,17 @@ kafka-service:
       topics: ${KAFKA_TOPICS}
       auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET}
       session-timeout-ms: ${KAFKA_SESSION_TIMEOUT_MS}
+      security:
+        protocol: PLAINTEXT
+      ssl:
+        enabled: true
+        truststore-location: ${KAFKA_TRUST_STORE_LOCATION}
+        truststore-password: ${KAFKA_TRUST_STORE_PASSWORD}
+        keystore-location: ${KAFKA_KEY_STORE_LOCATION}
+        keystore-password: ${KAFKA_KEY_STORE_PASSWORD}
+        key-password: ${KAFKA_KEY_PASSWORD}
+        truststore-type: JKS
+        keystore-type: JKS
     producer:
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
       max-request-size: ${KAFKA_MAX_REQUEST_SIZE}

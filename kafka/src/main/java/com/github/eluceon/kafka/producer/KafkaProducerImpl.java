@@ -3,7 +3,7 @@ package com.github.eluceon.kafka.producer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.eluceon.kafka.config.KafkaProducerProperties;
+import com.github.eluceon.kafka.config.properties.KafkaProducerProperties;
 import com.github.eluceon.kafka.dto.ServiceStatusEventDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

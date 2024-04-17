@@ -10,7 +10,8 @@ import com.github.eluceon.handler.dto.EventDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.springframework.kafka.listener.MessageListener;
+import org.springframework.kafka.listener.AcknowledgingMessageListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -19,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class Consumer implements MessageListener<String, String> {
+public class Consumer implements AcknowledgingMessageListener<String, String> {
     private final EventHandler<EventDto> eventHandler;
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -28,11 +29,16 @@ public class Consumer implements MessageListener<String, String> {
     };
 
     @Override
-    public void onMessage(ConsumerRecord<String, String> data) {
-        log.debug("Message from topic = [{}] processing started", data.topic());
-        final List<EventDto> events = toEvents(data);
-
-        events.forEach(this::processEvent);
+    public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {
+        try {
+            log.info("Message from topic {} processing started", data.topic());
+            final List<EventDto> events = toEvents(data);
+            events.forEach(this::processEvent);
+            acknowledgment.acknowledge();
+            log.info("Message from topic {} acknowledged successfully", data.topic());
+        } catch (Exception e) {
+            log.error("Failed to process message from topic {}", data.topic(), e);
+        }
     }
 
     private void processEvent(EventDto event) {

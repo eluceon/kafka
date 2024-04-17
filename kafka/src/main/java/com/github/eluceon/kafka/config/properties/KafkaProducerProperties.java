@@ -1,4 +1,4 @@
-package com.github.eluceon.kafka.config;
+package com.github.eluceon.kafka.config.properties;
 
 import lombok.Getter;
 import lombok.Setter;

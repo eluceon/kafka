@@ -1,5 +1,6 @@
 package com.github.eluceon.kafka.config;
 
+import com.github.eluceon.kafka.config.properties.KafkaProducerProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.ProducerConfig;
