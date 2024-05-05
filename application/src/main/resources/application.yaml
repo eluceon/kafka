@@ -38,6 +38,7 @@ kafka-service:
     consumer:
       consumer-concurrency: ${KAFKA_CONSUMER_CONCURRENCY:1}
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      client-id: ${spring.application.name}
       group-id: ${KAFKA_GROUP_ID}
       topics: ${KAFKA_TOPICS}
       auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET}
@@ -55,6 +56,7 @@ kafka-service:
         keystore-type: JKS
     producer:
       bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+      client-id: ${spring.application.name}
       max-request-size: ${KAFKA_MAX_REQUEST_SIZE}
       batch-size: ${KAFKA_BATCH_SIZE}
       lingerMs: ${KAFKA_LINGER_MS}

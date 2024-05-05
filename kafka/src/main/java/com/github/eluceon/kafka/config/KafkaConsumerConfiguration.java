@@ -69,6 +69,7 @@ public class KafkaConsumerConfiguration {
             setConfigs(configs, SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, ssl.getKeystoreType());
             setConfigs(configs, SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, ssl.getTruststoreType());
         }
+        configs.put(ConsumerConfig.CLIENT_ID_CONFIG, properties.getClientId());
         configs.put(ConsumerConfig.GROUP_ID_CONFIG, properties.getGroupId());
         configs.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         configs.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, properties.getSessionTimeoutMs());

@@ -16,6 +16,11 @@ public class KafkaProducerProperties {
     private String bootstrapServers;
 
     /**
+     * Идентификатор клиента
+     */
+    private String clientId;
+
+    /**
      * Максимальный размер запроса в байтах.
      * Определяет верхний предел размера сообщения, которое может отправить продюсер.
      */

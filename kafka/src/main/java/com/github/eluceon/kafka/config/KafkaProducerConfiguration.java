@@ -41,6 +41,7 @@ public class KafkaProducerConfiguration {
         configProps.put(ProducerConfig.BATCH_SIZE_CONFIG, properties.getBatchSize());
         configProps.put(ProducerConfig.LINGER_MS_CONFIG, properties.getLingerMs());
         configProps.put(ProducerConfig.ACKS_CONFIG, properties.getAcks());
+        configProps.put(ProducerConfig.CLIENT_ID_CONFIG, properties.getClientId());
 
         return configProps;
     }

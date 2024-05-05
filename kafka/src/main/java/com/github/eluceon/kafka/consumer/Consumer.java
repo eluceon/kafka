@@ -14,30 +14,35 @@ import org.springframework.kafka.listener.AcknowledgingMessageListener;
 import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class Consumer implements AcknowledgingMessageListener<String, String> {
-    private final EventHandler<EventDto> eventHandler;
+
     private static final ObjectMapper MAPPER = new ObjectMapper()
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             .registerModule(new JavaTimeModule());
     private static final TypeReference<List<EventDto>> EVENT_TYPE_REF = new TypeReference<>() {
     };
 
+    private final EventHandler<EventDto> eventHandler;
+
     @Override
     public void onMessage(ConsumerRecord<String, String> data, Acknowledgment acknowledgment) {
         try {
-            log.info("Message from topic {} processing started", data.topic());
+            logMetadata(data);
             final List<EventDto> events = toEvents(data);
             events.forEach(this::processEvent);
             acknowledgment.acknowledge();
-            log.info("Message from topic {} acknowledged successfully", data.topic());
+            log.info("Processed message on topic {}: {}", data.topic(), data.value());
         } catch (Exception e) {
-            log.error("Failed to process message from topic {}", data.topic(), e);
+            log.error("Failed to process message on topic {}: {}", data.topic(), data.value(), e);
         }
     }
 
@@ -59,8 +64,6 @@ public class Consumer implements AcknowledgingMessageListener<String, String> {
             return Collections.emptyList();
         }
 
-        log.debug("Received message: [{}]", message.value());
-
         try {
             return MAPPER.readValue(value, EVENT_TYPE_REF);
         } catch (JsonProcessingException e) {
@@ -69,4 +72,13 @@ public class Consumer implements AcknowledgingMessageListener<String, String> {
             return Collections.emptyList();
         }
     }
+
+    private void logMetadata(ConsumerRecord<String, String> data) {
+        LocalDateTime timestampAsDate =
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(data.timestamp()), TimeZone.getDefault().toZoneId());
+
+        log.info("Received data on topic {} (partition = {}, offset = {}, timestamp = {} ({}))",
+                data.topic(), data.partition(), data.offset(), data.timestamp(), timestampAsDate);
+    }
 }
+

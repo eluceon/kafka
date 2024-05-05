@@ -23,6 +23,11 @@ public class KafkaConsumerProperties {
     private String bootstrapServers;
 
     /**
+     * Идентификатор клиента
+     */
+    private String clientId;
+
+    /**
      * Идентификатор группы
      */
     private String groupId;
